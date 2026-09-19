@@ -4,6 +4,7 @@ import { useFocusEffect, useLocalSearchParams, useRouter, Stack } from "expo-rou
 import { getMascotaPorId, eliminarMascota } from "../../../services/mascotasService";
 import { getHistorialPorMascota } from "../../../services/historialService";
 import { Mascota } from "../../../types/models";
+import { formatearNumero } from "../../../utils/numero";
 import Boton from "../../../components/Boton";
 
 export default function FichaMascota() {
@@ -94,7 +95,7 @@ export default function FichaMascota() {
         </Text>
         <InfoRow etiqueta="Sexo" valor={mascota.sexo} />
         <InfoRow etiqueta="Fecha de Nacimiento" valor={mascota.fechaNacimiento} />
-        <InfoRow etiqueta="Peso" valor={`${mascota.peso} kg`} />
+        <InfoRow etiqueta="Peso" valor={`${formatearNumero(mascota.peso)} kg`} />
         <InfoRow etiqueta="Color de Pelaje" valor={mascota.colorPelaje} ultimo />
       </View>
 

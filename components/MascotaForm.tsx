@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 import { Mascota, Especie, Sexo } from "../types/models";
+import { esFechaValida } from "../utils/fecha";
+import { textoANumero, formatearNumero } from "../utils/numero";
 import Boton from "./Boton";
 
 interface Props {
@@ -23,7 +25,7 @@ export default function MascotaForm({
   const [especie, setEspecie] = useState<Especie>(mascotaInicial?.especie ?? "Perro");
   const [raza, setRaza] = useState(mascotaInicial?.raza ?? "");
   const [fechaNacimiento, setFechaNacimiento] = useState(mascotaInicial?.fechaNacimiento ?? "");
-  const [peso, setPeso] = useState(mascotaInicial ? String(mascotaInicial.peso) : "");
+  const [peso, setPeso] = useState(mascotaInicial ? formatearNumero(mascotaInicial.peso) : "");
   const [colorPelaje, setColorPelaje] = useState(mascotaInicial?.colorPelaje ?? "");
   const [sexo, setSexo] = useState<Sexo>(mascotaInicial?.sexo ?? "Macho");
   const [error, setError] = useState("");
@@ -40,7 +42,12 @@ export default function MascotaForm({
       return;
     }
 
-    const pesoNumerico = Number(peso.replace(",", "."));
+    if (!esFechaValida(fechaNacimiento.trim())) {
+      setError("La fecha de nacimiento debe tener el formato dd-mm-aaaa y ser válida.");
+      return;
+    }
+
+    const pesoNumerico = textoANumero(peso);
     if (Number.isNaN(pesoNumerico) || pesoNumerico <= 0) {
       setError("El peso debe ser un número válido mayor a 0.");
       return;
@@ -84,11 +91,11 @@ export default function MascotaForm({
         />
       </Campo>
 
-      <Campo etiqueta="Fecha de Nacimiento (AAAA-MM-DD)">
+      <Campo etiqueta="Fecha de Nacimiento (DD-MM-AAAA)">
         <TextInput
           value={fechaNacimiento}
           onChangeText={setFechaNacimiento}
-          placeholder="2023-05-10"
+          placeholder="10-05-2023"
           className="bg-surface rounded-full px-4 py-3"
           style={{ fontFamily: "Poppins_400Regular" }}
         />
@@ -100,7 +107,7 @@ export default function MascotaForm({
             <TextInput
               value={peso}
               onChangeText={setPeso}
-              placeholder="28"
+              placeholder="28,5"
               keyboardType="decimal-pad"
               className="bg-surface rounded-full px-4 py-3"
               style={{ fontFamily: "Poppins_400Regular" }}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { HistorialEntry } from "../types/models";
+import { esFechaValida } from "../utils/fecha";
 import Boton from "./Boton";
 
 interface Props {
@@ -27,6 +28,11 @@ export default function HistorialForm({
       return;
     }
 
+    if (!esFechaValida(fecha.trim())) {
+      setError("La fecha debe tener el formato dd-mm-aaaa y ser válida.");
+      return;
+    }
+
     setError("");
     onSubmit({
       fecha: fecha.trim(),
@@ -39,11 +45,11 @@ export default function HistorialForm({
 
   return (
     <View className="gap-4">
-      <Campo etiqueta="Fecha (AAAA-MM-DD)">
+      <Campo etiqueta="Fecha (DD-MM-AAAA)">
         <TextInput
           value={fecha}
           onChangeText={setFecha}
-          placeholder="2024-03-15"
+          placeholder="15-03-2024"
           className="bg-surface rounded-full px-4 py-3"
           style={{ fontFamily: "Poppins_400Regular" }}
         />

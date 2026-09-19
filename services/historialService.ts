@@ -1,5 +1,6 @@
 import { getItem, setItem } from "./storage";
 import { HistorialEntry } from "../types/models";
+import { convertirAFecha } from "../utils/fecha";
 
 const KEY = "historial";
 
@@ -7,7 +8,7 @@ export async function getHistorialPorMascota(mascotaId: string): Promise<Histori
   const todo = (await getItem<HistorialEntry[]>(KEY)) ?? [];
   return todo
     .filter((h) => h.mascotaId === mascotaId)
-    .sort((a, b) => (a.fecha < b.fecha ? 1 : -1)); // más reciente primero
+    .sort((a, b) => convertirAFecha(b.fecha).getTime() - convertirAFecha(a.fecha).getTime()); // más reciente primero
 }
 
 export async function getEntradaPorId(id: string): Promise<HistorialEntry | undefined> {
